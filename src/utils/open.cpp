@@ -13,6 +13,14 @@
 
  */
 
+/*
+ * Modifications (CDDL-1.0 section 3.3 notice):
+ *   2026-11-08 Bedroom Development: open_datastream() X3F size adjustment loop
+ *   uses the array length of foveon_data instead of foveon_count, which is not
+ *   defined in snapshot 202611 (build failure with USE_X3FTOOLS).
+ *   Branch argent-202611 of https://github.com/bedroomdevelopment/LibRaw
+ */
+
 #include "../../internal/libraw_cxx_defs.h"
 #include "../../internal/libraw_cameraids.h"
 
@@ -1352,7 +1360,7 @@ int LibRaw::open_datastream(LibRaw_abstract_datastream *stream)
 #ifdef USE_X3FTOOLS
 	if (load_raw == &LibRaw::x3f_load_raw)
     {
-      for (int i = 0; i < foveon_count; i++)
+      for (int i = 0; i < int(sizeof(foveon_data) / sizeof(foveon_data[0])); i++)
         if (!strcasecmp(imgdata.idata.make, foveon_data[i].make) &&
             !strcasecmp(imgdata.idata.model, foveon_data[i].model) &&
             imgdata.sizes.raw_width == foveon_data[i].raw_width &&
